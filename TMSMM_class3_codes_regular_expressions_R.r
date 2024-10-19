@@ -17,7 +17,6 @@ library(stringr)
 text <- "String"
 text_nested <- 'Single quotation mark with "nested" double quotation'
 
-
 # When a quote is not closed - press ESC to avoid error
 # quote1 <- "" "
 # quote2 <- '' '
@@ -28,9 +27,10 @@ text_nested <- 'Single quotation mark with "nested" double quotation'
 
 # a) nesting
 one_quote_single <- "'"
+
 one_quote_double <- '"'
 
-
+one_quote_double
 # b) using backslash
 one_quote_single <- '\' '
 one_quote_double <- "\" "
@@ -107,7 +107,7 @@ writeLines(character_vector4)
 
 
 # the simplest regular expression is a piece of text
-expression <- c("international", "associations", "intra-organisational", "foundations", "technical", "institutions")
+expression <- c("international","all", "associations", "intra-organisational", "foundations", "technical", "institutions")
 
 str_view(expression, "national")
 str_view(expression, "al")
@@ -117,6 +117,7 @@ str_view(expression, "tions")
 
 # dot matches any character except newline
 str_view(expression, ".a.")
+str_view(expression, "a.")
 str_view(expression, "t.")
 str_view(expression, ".o")
 
@@ -207,9 +208,13 @@ writeLines((vector))
 
 # Use the function str_view() and find in vector: 
 # a) string of 3 characters with the letter o in the middle
+str_view(vector, ".o.")
 # b) expression "emoticon"
+str_view(vector, "^emoticon$")
 # c) expression ":)"
+str_view(vector,":\\)")
 # d) expression "$^$"
+str_view(vector,"\\$\\^\\$")
 
 
 # -------------------------------------------------#
