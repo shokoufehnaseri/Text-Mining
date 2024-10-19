@@ -221,12 +221,15 @@ str_view(vector,"\\$\\^\\$")
 # 2. Exercise ----
 # Corpus of 980 words is given
 stringr::words
-
+wordd <- stringr::words
 
 # Use the function str_view() and find in the corpus:
 # a) all words containing the expression "yes" (add the parameter match=T)
+str_view(wordd, "yes")
 # b) all words starting with "w"
+str_view(wordd, "^w")
 # c) all words ending with "x"
+str_view(wordd, "x$")
 
 
 # -------------------------------------------------#
@@ -237,9 +240,15 @@ stringr::words
 
 # Use the function str_view() and find in the corpus:
 # a) all words starting with a vowel
+str_view(wordd, "^a |^e|^o|^i|^u")
+str_view(wordd, "^[aeoui]")
 # b) all words that start only with a consonant
+str_view(wordd, "^[^aeoui]")
 # c) all words ending with "ing" or "ise"
+str_view(wordd, "(ing|ise)$")
 # d) all words ending with "ed" but not with "eed"
+str_view(wordd, "[^e]ed$")
+
 
 # -------------------------------------------------#
 
