@@ -13,13 +13,29 @@ text_path <- "C:\\Users\\Shokoufeh\\OneDrive\\third_semester\\Text-Mining\\2th_h
 
 # Load and preprocess text files
 docs <- VCorpus(DirSource(text_path, encoding = "UTF-8"))
+# Create Document-Term Matrix (DTM) with TF-IDF
 
 # Preprocess the texts
 docs <- tm_map(docs, content_transformer(tolower))
 docs <- tm_map(docs, removePunctuation)
 docs <- tm_map(docs, removeNumbers)
 docs <- tm_map(docs, removeWords, stopwords("en"))
+docs <- tm_map(docs, stripWhitespace) 
 docs <- tm_map(docs, stemDocument)
+
+library(tm)
+
+# Custom content transformer
+replace_contractions <- content_transformer(function(x) {
+  x <- gsub("'re", " are", x)
+  x <- gsub("gonna", "going to", x)
+  x <- gsub("theyr", "they are", x)  # Fix errors or typos
+  x
+})
+
+# Apply to the corpus
+docs <- tm_map(docs, replace_contractions)
+
 
 # Create a Document-Term Matrix (DTM) using TF-IDF weighting
 dtm <- DocumentTermMatrix(docs, control = list(weighting = weightTfIdf))
@@ -31,7 +47,7 @@ dtm <- removeSparseTerms(dtm, 0.95)
 dtm_matrix <- as.matrix(dtm)
 
 # Set the number of clusters
-num_clusters <- 5  # Adjust this based on exploration of data
+num_clusters <- 2  # Adjust this based on exploration of data
 
 # Perform K-means clustering
 set.seed(123)  # For reproducibility
@@ -62,27 +78,9 @@ cluster_summary <- data.frame(
 print(cluster_summary)
 
 
-# Analyze cluster results
-cluster_labels <- kmeans_result$cluster
+# based on five top repetition" "’re, flexibl, risk, project, countri"  it looks related
+# to the related to country's projects and measuring the risk of that.
+#But I know these results are not correct and I hope you will share us the correct clustering 
+#and result.
 
-# Attach cluster labels to each document
-doc_clusters <- data.frame(doc_id = names(docs), cluster = cluster_labels)
 
-# Interpret each cluster by finding top terms in each
-# Sum term frequencies within each cluster
-cluster_terms <- aggregate(dtm_matrix, by = list(cluster_labels), FUN = sum)
-top_terms <- lapply(1:num_clusters, function(i) {
-  sort(cluster_terms[i, -1], decreasing = TRUE)[1:10]  # Top 10 terms for each cluster
-})
-
-# Print top terms for each cluster
-for (i in 1:num_clusters) {
-  cat("Top terms for Cluster", i, ":\n")
-  print(names(top_terms[[i]]))
-  cat("\n")
-}
-
-# Optional: Use LDA for further topic modeling
-lda_result <- LDA(dtm, k = num_clusters, control = list(seed = 123))
-topics <- terms(lda_result, 10)  # Top 10 terms for each topic
-print(topics)
